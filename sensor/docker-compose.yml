@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ../sensor
+    container_name: django-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ../sensor:/app
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ../frontend # Norāda ceļu uz Nuxt Dockerfile
+    container_name: nuxt-frontend
+    volumes:
+      - ../frontend:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NUXT_PUBLIC_API_BASE=http://django-backend:8000
